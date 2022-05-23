@@ -1,4 +1,9 @@
 import TMDBClient from "../../utils/TMDBClient";
+import { MOCKED_MOVIES, MOCKED_SHOWS } from "../mocks/TMDB";
+
+const { REACT_APP_TMDB_URL: URL, REACT_APP_TMDB_TOKEN: TOKEN } = process.env;
+
+const FETCH_OPTIONS = { headers: { 'Authorization': `Bearer ${TOKEN}` } };
 
 describe('• TMDB Client', () => {
   let client;
@@ -17,14 +22,15 @@ describe('• TMDB Client', () => {
     });
 
     it('should get a movie with the specified ID', async () => {
-      const expected = true;
+      const expected = MOCKED_MOVIES[0];
+      const id = 550;
 
-      fetch.mockResolvedValue(expected);
+      fetch.mockResolvedValue(JSON.stringify(expected));
 
-      const result = await client.movie('123');
+      const result = await client.movie(id);
 
-      expect(fetch).toHaveBeenCalled();
-      expect(result).toBe(expected);
+      expect(fetch).toHaveBeenCalledWith(`${URL}/movie/${id}`, FETCH_OPTIONS);
+      expect(result).toStrictEqual(expected);
 
     });
 
@@ -41,14 +47,15 @@ describe('• TMDB Client', () => {
     });
 
     it('should get a TV show with the specified ID', async () => {
-      const expected = true;
+      const expected = MOCKED_SHOWS[0];
+      const id = 2316;
 
-      fetch.mockResolvedValue(expected);
+      fetch.mockResolvedValue(JSON.stringify(expected));
 
-      const result = await client.tv('123');
+      const result = await client.tv(id);
 
-      expect(fetch).toHaveBeenCalled();
-      expect(result).toBe(expected);
+      expect(fetch).toHaveBeenCalledWith(`${URL}/tv/${id}`, FETCH_OPTIONS);
+      expect(result).toStrictEqual(expected);
 
     });
 
