@@ -13,6 +13,7 @@ export default class Request {
   async #request(endpoint = '', method = 'GET', body = null) {
     let options = { ...this.#options, method };
 
+    // TODO: use switch block so we can handle not allowed methods
     if (method === 'POST' || method === 'PUT') {
       if (!body) throw new Error('Missing request body');
 

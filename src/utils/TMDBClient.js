@@ -1,23 +1,19 @@
+import Request from './Request';
 
 export default class TMDBClient {
   #url = process.env.REACT_APP_TMDB_URL;
   #token = process.env.REACT_APP_TMDB_TOKEN;
-
-  async #request(endpoint) {
-    const data = await fetch(`${this.#url}/${endpoint}`, {
-      headers: {
-        'Authorization': `Bearer ${this.#token}`
-      }
-    });
-
-    return JSON.parse(data);
-  }
+  #request = new Request(this.#url, {
+    headers: {
+      'Authorization': `Bearer ${this.#token}`
+    }
+  });
 
   async movie(id) {
     try {
       if (!id) throw new Error('Missing movie ID');
 
-      const movie = await this.#request(`movie/${id}`);
+      const movie = await this.#request.get(`movie/${id}`);
 
       return movie;
 
@@ -29,9 +25,9 @@ export default class TMDBClient {
 
   async tv(id) {
     try {
-      if (!id) throw new Error('Missing show ID');
+      if (!id) throw new Error('Missing TV show ID');
 
-      const show = await this.#request(`tv/${id}`);
+      const show = await this.#request.get(`tv/${id}`);
 
       return show;
 

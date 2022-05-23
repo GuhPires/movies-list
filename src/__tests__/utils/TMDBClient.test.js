@@ -1,65 +1,50 @@
-import TMDBClient from "../../utils/TMDBClient";
-import { MOCKED_MOVIES, MOCKED_SHOWS } from "../mocks/TMDB";
+import TMDBClient from '../../utils/TMDBClient';
+import Request from '../../utils/Request';
+import { MOCKED_MOVIES, MOCKED_SHOWS } from '../mocks/TMDB';
 
-const { REACT_APP_TMDB_URL: URL, REACT_APP_TMDB_TOKEN: TOKEN } = process.env;
-
-const FETCH_OPTIONS = { headers: { 'Authorization': `Bearer ${TOKEN}` } };
+jest.mock('../../utils/Request');
 
 describe('• TMDB Client', () => {
   let client;
-  
-  beforeAll(() => {
+
+  beforeEach(() => {
+    Request.mockClear();
     client = new TMDBClient();
   });
 
-  describe('# movie', () => {
-    it('should return an error when no ID is provided', async () => {
-      const expected = 'Missing movie ID';
-
-      const result = await client.movie();
-
-      expect(result).toBe(expected);
+  describe('# constructor', () => {
+    it('should create a Request instance', async () => {
+      expect(Request).toHaveBeenCalled();
     });
-
-    it('should get a movie with the specified ID', async () => {
-      const expected = MOCKED_MOVIES[0];
-      const id = 550;
-
-      fetch.mockResolvedValue(JSON.stringify(expected));
-
-      const result = await client.movie(id);
-
-      expect(fetch).toHaveBeenCalledWith(`${URL}/movie/${id}`, FETCH_OPTIONS);
-      expect(result).toStrictEqual(expected);
-
-    });
-
-    it.todo('should handle when the movie is not found');
   });
 
-  describe('# tv', () => {
-    it('should return an error when no ID is provided', async () => {
-      const expected = 'Missing show ID';
+  describe.each(['movie', 'tv'])('# %s', (method) => {
+    const isMovie = method === 'movie';
+    const methodStr = isMovie ? method : 'TV show';
 
-      const result = await client.tv();
+    it('should return an error when no ID is provided', async () => {
+      const expected = `Missing ${methodStr} ID`;
+
+      const result = await client[method]();
 
       expect(result).toBe(expected);
     });
 
-    it('should get a TV show with the specified ID', async () => {
-      const expected = MOCKED_SHOWS[0];
-      const id = 2316;
+    it(`should get a ${methodStr} with the specified ID`, async () => {
+      const expected = isMovie ? MOCKED_MOVIES[0] : MOCKED_SHOWS[0];
+      const id = isMovie ? 550 : 2316;
 
-      fetch.mockResolvedValue(JSON.stringify(expected));
+      const requestGetMock = jest
+        .spyOn(Request.prototype, 'get')
+        .mockImplementation(() => expected);
 
-      const result = await client.tv(id);
+      const result = await client[method](id);
 
-      expect(fetch).toHaveBeenCalledWith(`${URL}/tv/${id}`, FETCH_OPTIONS);
+      expect(requestGetMock).toHaveBeenCalledWith(`${method}/${id}`);
       expect(result).toStrictEqual(expected);
-
     });
 
-    it.todo('should handle when the TV show is not found');
+    it.todo(`should handle when the ${methodStr} is not found`);
   });
 
   describe('# search', () => {
@@ -80,8 +65,7 @@ describe('• TMDB Client', () => {
     });
 
     it.todo('should return a list with the query results');
-    
+
     it.todo('should handle when no movie or TV show is found');
   });
-
 });
