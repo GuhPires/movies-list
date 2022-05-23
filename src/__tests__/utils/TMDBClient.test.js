@@ -79,7 +79,7 @@ describe('• TMDB Client', () => {
       expect(result).toBe(expected);
     });
 
-    it.todo('should return an list with the query results');
+    it.todo('should return a list with the query results');
     
     it.todo('should handle when no movie or TV show is found');
   });
