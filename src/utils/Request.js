@@ -20,9 +20,11 @@ export default class Request {
       options.body = JSON.stringify(body);
     }
 
-    const data = await fetch(`${this.#baseURL}/${endpoint}`, options);
+    const data = await fetch(`${this.#baseURL}/${endpoint}`, options).then(
+      (res) => res.json()
+    );
 
-    return JSON.parse(data);
+    return data;
   }
 
   async get(endpoint = '') {

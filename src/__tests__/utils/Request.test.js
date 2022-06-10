@@ -5,6 +5,8 @@ const ENDPOINT = 'something';
 const BODY = { data: true };
 const FETCH_OPTIONS = { headers: { some: 'value' } };
 
+const FAKE_RESPONSE = (data) => ({ json: () => ({ ...data }) });
+
 describe('• Request', () => {
   describe('# constructor', () => {
     it('should throw an error when no base URL was passed', async () => {
@@ -30,7 +32,7 @@ describe('• Request', () => {
     it(`should perform a ${method.toUpperCase()} request`, async () => {
       const expected = { ok: 'OK' };
 
-      fetch.mockResolvedValue(JSON.stringify(expected));
+      fetch.mockResolvedValue(FAKE_RESPONSE(expected));
 
       const request = new Request(URL);
       const result = await request[method]();
@@ -44,7 +46,7 @@ describe('• Request', () => {
     it(`should perform a ${method.toUpperCase()} request on an endpoint`, async () => {
       const expected = { ok: 'OK' };
 
-      fetch.mockResolvedValue(JSON.stringify(expected));
+      fetch.mockResolvedValue(FAKE_RESPONSE(expected));
 
       const request = new Request(URL);
       const result = await request[method](ENDPOINT);
@@ -58,7 +60,7 @@ describe('• Request', () => {
     it(`should perform a method.toUpperCase() request with headers`, async () => {
       const expected = { ok: 'OK' };
 
-      fetch.mockResolvedValue(JSON.stringify(expected));
+      fetch.mockResolvedValue(FAKE_RESPONSE(expected));
 
       const request = new Request(URL, FETCH_OPTIONS);
       const result = await request[method]();
@@ -92,7 +94,7 @@ describe('• Request', () => {
     it(`should perform a ${method.toUpperCase()} request`, async () => {
       const expected = { ok: 'OK' };
 
-      fetch.mockResolvedValue(JSON.stringify(expected));
+      fetch.mockResolvedValue(FAKE_RESPONSE(expected));
 
       const request = new Request(URL);
       const result = await request[method]('', BODY);
@@ -107,7 +109,7 @@ describe('• Request', () => {
     it(`should perform a ${method.toUpperCase()} request on an endpoint`, async () => {
       const expected = { ok: 'OK' };
 
-      fetch.mockResolvedValue(JSON.stringify(expected));
+      fetch.mockResolvedValue(FAKE_RESPONSE(expected));
 
       const request = new Request(URL);
       const result = await request[method](ENDPOINT, BODY);
@@ -122,7 +124,7 @@ describe('• Request', () => {
     it(`should perform a ${method.toUpperCase()} request with headers`, async () => {
       const expected = { ok: 'OK' };
 
-      fetch.mockResolvedValue(JSON.stringify(expected));
+      fetch.mockResolvedValue(FAKE_RESPONSE(expected));
 
       const request = new Request(URL, FETCH_OPTIONS);
       const result = await request[method]('', BODY);

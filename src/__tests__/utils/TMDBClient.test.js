@@ -23,11 +23,17 @@ describe('• TMDB Client', () => {
     const methodStr = isMovie ? method : 'TV show';
 
     it('should return an error when no ID is provided', async () => {
-      const expected = `Missing ${methodStr} ID`;
+      expect.assertions(1);
 
-      const result = await client[method]();
+      let errMsg = 'Method did not threw rejection';
 
-      expect(result).toBe(expected);
+      try {
+        await client[method]();
+      } catch (err) {
+        errMsg = err.message;
+      }
+
+      expect(errMsg).toBe(`Missing ${methodStr} ID`);
     });
 
     it(`should get a ${methodStr} with the specified ID`, async () => {
@@ -49,19 +55,31 @@ describe('• TMDB Client', () => {
 
   describe('# search', () => {
     it('should return an error when no query is provided', async () => {
-      const expected = 'Missing query';
+      expect.assertions(1);
 
-      const result = await client.search();
+      let errMsg = 'Method did not threw rejection';
 
-      expect(result).toBe(expected);
+      try {
+        await client.search();
+      } catch (err) {
+        errMsg = err.message;
+      }
+
+      expect(errMsg).toBe('Missing query');
     });
 
     it('should return an error when the query is too short', async () => {
-      const expected = 'Query is too short';
+      expect.assertions(1);
 
-      const result = await client.search('ab');
+      let errMsg = 'Method did not threw rejection';
 
-      expect(result).toBe(expected);
+      try {
+        await client.search('ab');
+      } catch (err) {
+        errMsg = err.message;
+      }
+
+      expect(errMsg).toBe('Query is too short');
     });
 
     it.todo('should return a list with the query results');
